@@ -2,6 +2,8 @@ package com.example.demo.controller;//package com.rmit.smartresponse.controller;
 
 import com.example.demo.data.EmergencyData;
 import com.example.demo.model.Emergency;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
@@ -29,10 +31,16 @@ public class EmergencyController {
     }
 
     @GetMapping("/{id}")
-    public Object getEmergencyById(@PathVariable int id) {
-        return emergencies.stream()
+    public ResponseEntity<?> getEmergencyById(@PathVariable int id) {
+        Optional<Emergency> emergency = emergencies.stream()
                 .filter(e -> e.getId() == id)
-                .findFirst()
-                .orElse( (Emergency) Map.of("error", "Emergency not found"));
+                .findFirst();
+
+        if (emergency.isPresent()) {
+            return ResponseEntity.ok(emergency.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Emergency not found"));
+        }
     }
 }
