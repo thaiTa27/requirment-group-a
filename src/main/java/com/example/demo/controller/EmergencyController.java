@@ -1,7 +1,7 @@
-package com.example.demo.controller;
+package com.example.demo.controller;//package com.rmit.smartresponse.controller;
 
 import com.example.demo.data.EmergencyData;
-
+import com.example.demo.model.Emergency;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
@@ -9,22 +9,30 @@ import java.util.*;
 @RequestMapping("/api/emergencies")
 public class EmergencyController {
 
-    private final List<Map<String, Object>> emergencies = EmergencyData.getEmergencies();
+    private final List<Emergency> emergencies = EmergencyData.getEmergencies();
 
-    // ✅ GET: Retrieve all active emergencies
+
+    //get all emege
     @GetMapping
     public Map<String, Object> getAllEmergencies() {
         return Map.of("emergencies", emergencies);
     }
 
-    // ✅ POST: Report a new emergency
     @PostMapping
-    public Map<String, Object> reportEmergency(@RequestBody Map<String, Object> newEmergency) {
+    public Map<String, Object> reportEmergency(@RequestBody Emergency newEmergency) {
         int newId = emergencies.size() + 1;
-        newEmergency.put("id", newId);
-        newEmergency.put("status", "Active");
+        newEmergency.setId(newId);
+        newEmergency.setStatus("Active");
         emergencies.add(newEmergency);
 
         return Map.of("message", "Emergency reported successfully", "id", newId);
+    }
+
+    @GetMapping("/{id}")
+    public Object getEmergencyById(@PathVariable int id) {
+        return emergencies.stream()
+                .filter(e -> e.getId() == id)
+                .findFirst()
+                .orElse( (Emergency) Map.of("error", "Emergency not found"));
     }
 }
