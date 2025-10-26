@@ -1,5 +1,7 @@
 package com.example.demo.model;
 
+import java.time.LocalDateTime;
+
 public class Emergency {
     private int id;
     private String type;
@@ -7,6 +9,8 @@ public class Emergency {
     private String severity;
     private String status;
     private String reportedBy;
+
+    private LocalDateTime reportedAt;
 
     public Emergency() {}
 
@@ -17,6 +21,7 @@ public class Emergency {
         this.severity = severity;
         this.status = status;
         this.reportedBy = reportedBy;
+        this.reportedAt = LocalDateTime.now();
     }
 
     public int getId() { return id; }
@@ -36,4 +41,8 @@ public class Emergency {
 
     public String getReportedBy() { return reportedBy; }
     public void setReportedBy(String reportedBy) { this.reportedBy = reportedBy; }
+
+    public LocalDateTime getReportedAt() { return reportedAt; }
+    public void setReportedAt(LocalDateTime reportedAt) { this.reportedAt = reportedAt;}
+
 }
